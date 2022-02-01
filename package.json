@@ -15,7 +15,9 @@
     "postcss": "^8.4.5",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "tailwindcss": "^3.0.8"
+    "swt": "^0.1.0",
+    "tailwindcss": "^3.0.8",
+    "universal-cookie": "^4.0.4"
   },
   "devDependencies": {
     "eslint": "8.6.0",
