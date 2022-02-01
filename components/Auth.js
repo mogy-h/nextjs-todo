@@ -1,8 +1,44 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { LockClosedIcon } from "@heroicons/react/solid";
+import { useState } from "react";
+import { useRouter } from "react";
+import Cookie from "universal-cookie";
+
+const cookie = new Cookie();
 
 export default function Auth() {
+  const router = useRouter();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLogin, setIsLogin] = useState(true);
+
+  const login = async () => {
+    try {
+      await fetch(`${NEXT_PUBLIC_RESTAPI_URL}api/auth/jwt/create`, {
+        method: "POST",
+        body: JSON.stringify({ username: username, password: password }),
+        header: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => {
+          if (res.status === 400) {
+            throw "authentication failed";
+          } else if (res.ok) {
+            return res.json();
+          }
+        })
+        .then((data) => {
+          const option = { path: "/" };
+          cookie.set("access_token", data.access, option);
+        });
+      router.push("/main-page");
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   return (
     <>
       <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -54,7 +90,10 @@ export default function Auth() {
 
             <div className="flex justify-center">
               <div className="text-sm">
-                <a href="#" className="cursor-pointer font-medium text-indigo-600 hover:text-indigo-500">
+                <a
+                  href="#"
+                  className="cursor-pointer font-medium text-indigo-600 hover:text-indigo-500"
+                >
                   Move to Sign in Page?
                 </a>
               </div>
